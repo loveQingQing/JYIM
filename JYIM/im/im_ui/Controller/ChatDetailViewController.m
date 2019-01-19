@@ -15,14 +15,19 @@
 #import "JChatAudioCell.h"
 #import "JChatImageCell.h"
 #import "JChatVideoCell.h"
+#import "JChatLocationCell.h"
+
 #import "JChatTextCellFrameModel.h"
 #import "JChatAudioCellFrameModel.h"
 #import "JChatImageCellFrameModel.h"
 #import "JChatVideoCellFrameModel.h"
+#import "JChatLocationCellFrameModel.h"
+
 #import "TZImageManager.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
+#import "JChatLocationViewController.h"
 
 
 @interface ChatDetailViewController ()<UITableViewDelegate,UITableViewDataSource,IMClientManagerDelegate>
@@ -46,7 +51,14 @@
     [super viewDidLoad];
     
     self.isFirstScrollToBottom = YES;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_back"] style:(UIBarButtonItemStylePlain) target:self action:@selector(backAction)];
+    
+    UIButton * backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backBtn addTarget:self action:@selector(backAction) forControlEvents:UIControlEventTouchUpInside];
+    [backBtn setImage:[UIImage imageNamed:@"nav_back"] forState:UIControlStateNormal];
+    backBtn.frame = CGRectMake(0, 0, 40, 40);
+    UIBarButtonItem * leftBI = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
+    self.navigationItem.leftBarButtonItem = leftBI;
+    
     _limit = 20;
     self.view.backgroundColor = [UIColor whiteColor];
     self.datas = [NSMutableArray array];
@@ -126,7 +138,9 @@
                 break;
             case 5://位置
             {
-                
+                JChatLocationCellFrameModel * cellFrameModel = [[JChatLocationCellFrameModel alloc] init];
+                cellFrameModel.messageInfoModel = model;
+                [self.cellFrameModelArr addObject:cellFrameModel];
             }
                 break;
             default:
@@ -471,6 +485,27 @@
             }];
             [self scrollToBottom];
            
+        }locationCallback:^(NSString *lat, NSString *lon, NSString *detailStr) {
+            
+         MessageInfoModel * locationMessageModel = [[IMClientManager sharedInstance] sendLocationMessageWithLat:lat lon:lon detailLocationStr:detailStr toUserId:weakSelf.uid];
+            if (weakSelf.datas.count == 0) {
+                [locationMessageModel handleShowTimeWithLastMessageModel:nil];
+            }else{
+                MessageInfoModel * lastMessageModel = [self.datas lastObject];
+                [locationMessageModel handleShowTimeWithLastMessageModel:lastMessageModel];
+            }
+            JChatLocationCellFrameModel * cellFrameModel = [[JChatLocationCellFrameModel alloc] init];
+            cellFrameModel.messageInfoModel = locationMessageModel;
+            [weakSelf.cellFrameModelArr addObject:cellFrameModel];
+            
+            [weakSelf.datas addObject:locationMessageModel];
+            [self.tableView beginUpdates];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.datas.count - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView endUpdates];
+            [weakSelf closeKeyboard];
+            [self scrollToBottom];
+            
+            
         } target:self];
     }
     return _customKeyboard;
@@ -865,6 +900,43 @@
         }];
         return cell;
         
+    }else if ([cellFrameModel isKindOfClass:[JChatLocationCellFrameModel class]]) {
+        
+        JChatLocationCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"JChatLocationCell"];
+        if (!cell) {
+            cell = [[JChatLocationCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"JChatLocationCell"];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        cell.locationCellFrameModel = self.cellFrameModelArr[indexPath.row];
+        [cell sendAgainCallback:^(MessageInfoModel * _Nonnull locationMessageModel) {
+            
+            __block MessageInfoModel * locMessageModel = locationMessageModel;
+            NSDictionary * paraDic = @{@"content":locMessageModel.messageText,@"time":locMessageModel.sendTime,@"urlimg":@"",@"urlfile":@"",@"lon":locMessageModel.lon,@"lat":locMessageModel.lat};
+            //发送文本
+            int code = [[IMClientManager sharedInstance] sendMessageWithJsonStr:[AppUtil convertToJsonStr:paraDic] toUid:weakSelf.uid fp:locMessageModel.messageInfoId WithType:5];
+            if (code == 0) {
+                locMessageModel.sendStatus = @"1";
+                [[IMClientManager sharedInstance].imDB updateMessageInfoWithMessageInfoId:locMessageModel.messageInfoId sendStatus:@"1" picUrl:@"" audioUrl:@"" videoUrl:@"" hasReadAudio:0];
+            }else{
+                locMessageModel.sendStatus = @"0";
+            }
+            [weakSelf.tableView beginUpdates];
+            [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [weakSelf.tableView endUpdates];
+            
+        } showDetailLocationCallback:^(MessageInfoModel * _Nonnull locationMessageModel) {
+            JChatLocationViewController * vc = [[JChatLocationViewController alloc] init];
+            vc.locationType = LocationType_show;
+            vc.lat = locationMessageModel.lat;
+            vc.lon = locationMessageModel.lon;
+            vc.locationDetailStr = locationMessageModel.messageText;
+            [weakSelf.navigationController pushViewController:vc animated:YES];
+        } longpressCallback:^(LongpressSelectHandleType type, MessageInfoModel * _Nonnull locationMessageModel) {
+            
+        } userInfoCallback:^(NSString * _Nonnull userID) {
+            
+        }];
+        return cell;
     }
     
     return nil;
@@ -882,6 +954,9 @@
         return cellFrameModel.cellHeight;
     }else if ([cellFrameModel isKindOfClass:[JChatVideoCellFrameModel class]]){
         JChatVideoCellFrameModel * cellFrameModel = (JChatVideoCellFrameModel*)_cellFrameModelArr[indexPath.row];
+        return cellFrameModel.cellHeight;
+    }else if ([cellFrameModel isKindOfClass:[JChatLocationCellFrameModel class]]){
+        JChatLocationCellFrameModel * cellFrameModel = (JChatLocationCellFrameModel*)_cellFrameModelArr[indexPath.row];
         return cellFrameModel.cellHeight;
     }
     return 0;
@@ -941,7 +1016,9 @@
             break;
         case 5://位置
         {
-            
+            JChatLocationCellFrameModel * cellFrameModel = [[JChatLocationCellFrameModel alloc] init];
+            cellFrameModel.messageInfoModel = model;
+            [self.cellFrameModelArr addObject:cellFrameModel];
         }
             break;
             

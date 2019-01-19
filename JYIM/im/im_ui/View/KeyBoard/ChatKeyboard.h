@@ -23,6 +23,9 @@ typedef void(^ChatPictureMessageSendBlock)(NSArray<ChatAlbumModel *>* images);
 //视频消息发送回调
 typedef void(^ChatVideoMessageSendBlock)(ChatAlbumModel *videoModel);
 
+//位置消息发送回调
+typedef void(^ChatLocationMessageSendBlock)(NSString * lat,NSString * lon, NSString * detailStr);
+
 @interface ChatKeyboard : UIView
 
 @property (nonatomic,copy)void(^keyboardViewFrameChange)(CGRect frame);
@@ -30,7 +33,7 @@ typedef void(^ChatVideoMessageSendBlock)(ChatAlbumModel *videoModel);
 @property (nonatomic, strong) NSDictionary *emotionDict;
 
 //发送消息回调
-- (void)textCallback:(ChatTextMessageSendBlock)textCallback audioCallback:(ChatAudioMesssageSendBlock)audioCallback picCallback:(ChatPictureMessageSendBlock)picCallback videoCallback:(ChatVideoMessageSendBlock)videoCallback target:(id)target ;
+- (void)textCallback:(ChatTextMessageSendBlock)textCallback audioCallback:(ChatAudioMesssageSendBlock)audioCallback picCallback:(ChatPictureMessageSendBlock)picCallback videoCallback:(ChatVideoMessageSendBlock)videoCallback locationCallback:(ChatLocationMessageSendBlock)locationCallback target:(id)target;
 
 -(void)closeKeyboardContainer;
 

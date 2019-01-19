@@ -94,9 +94,7 @@
         });
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(toUserInfo)];
         [_iconView addGestureRecognizer:tap];
-        //头像长按
-        UILongPressGestureRecognizer *iconLongPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(iconLongPress:)];
-        [_iconView addGestureRecognizer:iconLongPress];
+        
         
     }
     return _iconView;
@@ -131,7 +129,7 @@
         _picView = [[UIImageView alloc]init];
         _picView.userInteractionEnabled = YES;
         //添加手势
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downLoadVideo)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playVideo)];
         [_picView addGestureRecognizer:tap];
         //长按手势
         UILongPressGestureRecognizer *longpress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longpressHandle)];
@@ -325,12 +323,6 @@
 }
 
 
-#pragma mark - 头像长按
-- (void)iconLongPress:(UILongPressGestureRecognizer *)longpress
-{
-    
-}
-
 #pragma mark - 单击头像
 - (void)toUserInfo
 {
@@ -347,7 +339,7 @@
 }
 
 #pragma mark - 下载视频在线播放
-- (void)downLoadVideo
+- (void)playVideo
 {
     _playVideoCallback(_videoCellFrameModel.messageInfoModel);
 }

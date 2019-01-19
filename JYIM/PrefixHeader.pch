@@ -75,4 +75,6 @@ View.layer.borderWidth = BorderWidth;
 
 #define hashEqual(str1,str2)  str1.hash == str2.hash  //hash码
 
+#define BaiduMapKey @"tjqQkCvNjkgd1k5odMtGTtsLQnHxHjTH"
+
 #endif /* PrefixHeader_pch */

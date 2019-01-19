@@ -250,7 +250,7 @@ static IMClientManager *instance = nil;
             break;
         case 5://位置
         {
-            
+           [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:resultDict[@"content"] sendTime:resultDict[@"time"] sendStatus:@"1" byMySelf:0 hasReceive:1 picName:@"" audioName:@"" videoName:@"" picSize:@"" duration:@"" videoSize:@"" picUrl:@"" audioUrl:@""  videoUrl:@"" lat:resultDict[@"lat"] lon:resultDict[@"lon"] hasReadAudio:0];
         }
             break;
         default:
@@ -577,8 +577,52 @@ static IMClientManager *instance = nil;
 /**
  发送位置消息 type 5
  */
--(void)sendLocationMessageWithLat:(NSString *)lat lon:(NSString *)lon toUserId:(NSString *)toUid completeBlock:(void(^)(int code))compBlock{
+-(MessageInfoModel *)sendLocationMessageWithLat:(NSString *)lat lon:(NSString *)lon detailLocationStr:(NSString *)detailLocationStr toUserId:(NSString *)toUid{
+    MessageInfoModel * model = [[MessageInfoModel alloc] init];
     
+    NSString * fp = [Protocal genFingerPrint];
+    NSString * sendTime = [AppUtil getNowTimeTimestamp];
+    NSDictionary * paraDic = @{@"content":detailLocationStr,@"time":sendTime,@"urlimg":@"",@"urlfile":@"",@"lon":lon,@"lat":lat};
+    model.messageInfoId = fp;
+    model.fromUser = self.uid;
+    model.toUser = toUid;
+    model.messageType = 5;
+    model.sendTime = sendTime;
+    model.byMySelf = YES;
+    model.hasReceive = NO;
+    model.messageText = detailLocationStr;
+    model.lat = lat;
+    model.lon = lon;
+    model.picName = @"";
+    model.audioName = @"";
+    model.videoName = @"";
+    model.picSize = CGSizeZero;
+    model.duration = @"";
+    model.videoSize = @"";
+    model.picUrl = @"";
+    model.audioUrl = @"";
+    model.videoUrl = @"";
+    
+    NSString * jsonStr = [AppUtil convertToJsonStr:paraDic];
+    
+    int code =  [self sendMessageWithJsonStr:jsonStr toUid:toUid fp:fp WithType:5];
+    if (code == COMMON_CODE_OK) {
+        
+        [self.imDB saveMessageInfoWithMessageInfoId:fp fromUserId:self.uid toUid:toUid messageType:5 messageText:detailLocationStr sendTime:sendTime sendStatus:@"1" byMySelf:1 hasReceive:0  picName:@"" audioName:@"" videoName:@"" picSize:@"" duration:@"" videoSize:@"" picUrl:@"" audioUrl:@"" videoUrl:@"" lat:lat lon:lon hasReadAudio:0];
+        model.sendStatus = @"1";
+    }else{
+        [self.imDB saveMessageInfoWithMessageInfoId:fp fromUserId:self.uid toUid:toUid messageType:5 messageText:detailLocationStr sendTime:sendTime sendStatus:@"0" byMySelf:1 hasReceive:0  picName:@"" audioName:@"" videoName:@"" picSize:@"" duration:@"" videoSize:@"" picUrl:@"" audioUrl:@"" videoUrl:@"" lat:lat lon:lon hasReadAudio:0];
+        model.sendStatus = @"0";
+    }
+    [self.imDB insertOrUpdateContactWithMessageId:fp fromUser:self.uid toUser:toUid messageType:5 sendTime:sendTime byMySelf:1 notReadCount:0 messageText:detailLocationStr];
+    
+    for (id<IMClientManagerDelegate> delegate in self.delegates) {
+        if ([delegate respondsToSelector:@selector(sendMessageWithFp:)]) {
+            [delegate sendMessageWithFp:fp];
+        }
+    }
+    
+    return model;
 }
 
 

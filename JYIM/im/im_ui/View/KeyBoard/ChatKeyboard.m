@@ -14,6 +14,7 @@
 #import "EmotionTextAttachment.h"
 #import "TZImageManager.h"
 #import "TZImagePickerController.h"
+#import "JChatLocationViewController.h"
 
 @interface ChatHandleButton : UIButton
 @end
@@ -41,6 +42,7 @@
 @property (nonatomic, copy) ChatAudioMesssageSendBlock audioCallback;
 @property (nonatomic, copy) ChatPictureMessageSendBlock pictureCallback;
 @property (nonatomic, copy) ChatVideoMessageSendBlock videoCallback;
+@property (nonatomic, copy) ChatLocationMessageSendBlock locationCallback;
 
 @property (nonatomic, assign) CGFloat keyboardHeight;
 @property (nonatomic,assign) BOOL keyboardIsShow;
@@ -254,9 +256,12 @@
     if (!_handleKeyboard) {
         _handleKeyboard = [[UIView alloc]init];
         _handleKeyboard.backgroundColor = [UIColor whiteColor];
-        NSArray *buttonNames = @[@"照片",@"拍摄",@"视频"];
-        for (NSInteger index = 0; index < 3; index ++) {
-            NSInteger  colum = index % 3;
+        NSArray *buttonNames = @[@"照片",@"拍摄",@"视频",@"位置"];
+        NSInteger btnCount = buttonNames.count;
+        CGFloat btnLeft = 30;
+        CGFloat btnTop = 15.f;
+        for (NSInteger index = 0; index < btnCount; index ++) {
+            
             ChatHandleButton *handleButton = [ChatHandleButton buttonWithType:UIButtonTypeCustom];
             handleButton.titleLabel.font = [UIFont systemFontOfSize:12];
             handleButton.tag = 9999 + index;
@@ -264,7 +269,15 @@
             handleButton.titleLabel.textAlignment = NSTextAlignmentCenter;
             [handleButton setTitle:buttonNames[index] forState:UIControlStateNormal];
             [handleButton setImage:[UIImage imageNamed:buttonNames[index]] forState:UIControlStateNormal];
-            handleButton.frame = CGRectMake(30 + colum*(60 + 25), 15, 60, 60);
+            if (btnLeft + 60.f + 25.f <= ScreenWidth) {
+               
+            }else{
+                btnLeft = 30;
+                btnTop = btnTop + 77 + 10;
+            }
+            handleButton.frame = CGRectMake(btnLeft, btnTop, 60, 77);
+            btnLeft = btnLeft + 60.f + 25.f;
+            
             [_handleKeyboard addSubview:handleButton];
             [handleButton addTarget:self action:@selector(handleButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         }
@@ -617,6 +630,26 @@
             NSLog(@"-------------点击了视频相册");
         }
             break;
+        case 3:
+        {
+            NSLog(@"-------------点击了地址");
+            if (self.locationCallback) {
+                
+                JChatLocationViewController * vc = [[JChatLocationViewController alloc] init];
+                vc.locationType = LocationType_send;
+                vc.locationMessageSendBlock = ^(NSString * _Nonnull lat, NSString * _Nonnull lon, NSString * _Nonnull detailStr) {
+                    if (weakSelf.locationCallback) {
+                        
+                        weakSelf.locationCallback(lat,lon,detailStr);
+                    }
+                };
+                UIViewController * viewController = weakSelf.target;
+                
+                [viewController.navigationController pushViewController:vc animated:YES];
+                
+            }
+        }
+            break;
         default:
             break;
     }
@@ -751,12 +784,13 @@
 }
 
 #pragma mark - 消息回调
-- (void)textCallback:(ChatTextMessageSendBlock)textCallback audioCallback:(ChatAudioMesssageSendBlock)audioCallback picCallback:(ChatPictureMessageSendBlock)picCallback videoCallback:(ChatVideoMessageSendBlock)videoCallback target:(id)target
+- (void)textCallback:(ChatTextMessageSendBlock)textCallback audioCallback:(ChatAudioMesssageSendBlock)audioCallback picCallback:(ChatPictureMessageSendBlock)picCallback videoCallback:(ChatVideoMessageSendBlock)videoCallback locationCallback:(ChatLocationMessageSendBlock)locationCallback target:(id)target
 {
     _textCallback     = textCallback;
     _audioCallback   = audioCallback;
     _pictureCallback = picCallback;
     _videoCallback   = videoCallback;
+    _locationCallback = locationCallback;
     _target              = target;
 }
 

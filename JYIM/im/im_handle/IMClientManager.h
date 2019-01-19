@@ -168,7 +168,7 @@
 /**
  发送位置消息
  */
--(void)sendLocationMessageWithLat:(NSString *)lat lon:(NSString *)lon toUserId:(NSString *)toUid completeBlock:(void(^)(int code))compBlock;
+-(MessageInfoModel *)sendLocationMessageWithLat:(NSString *)lat lon:(NSString *)lon detailLocationStr:(NSString *)detailLocationStr toUserId:(NSString *)toUid;
 
 -(int)sendMessageWithJsonStr:(NSString *)jsonStr toUid:(NSString *)toUid fp:(NSString *)fp  WithType:(int)typeU;
 
