@@ -3,7 +3,10 @@
 
 https://github.com/JackJiang2011/MobileIMSDK
 
-<span/>
-<img src="https://github.com/wubing3688/JYIM/blob/master/JYIM/chatlist.png" width = "50%"  div align=left /><img src="https://github.com/wubing3688/JYIM/blob/master/JYIM/chatdetail.png" width = "50%"  div align=right />
-</span>
+<figure class="half">
+    <img src="https://github.com/wubing3688/JYIM/blob/master/JYIM/chatlist.png" width = "50%"  div align=left />
+    <img src="https://github.com/wubing3688/JYIM/blob/master/JYIM/chatdetail.png" width = "50%"  div align=right />
+</figure>
+
+
 
