@@ -1,11 +1,11 @@
 # JYIM
-基于mobileimsdk和网上的ui改的，单聊即时通讯
-
-感谢
-https://github.com/coderMyy/CocoaAsyncSocket_Demo
+基于mobileimsdk的即时通讯
 
 https://github.com/JackJiang2011/MobileIMSDK
 
-![image](https://github.com/wubing3688/JYIM/blob/master/JYIM/chatlist.png)
+<figure class="half">
+    <img src="https://github.com/wubing3688/JYIM/blob/master/JYIM/chatlist.png" width = "50%"/><img src="https://github.com/wubing3688/JYIM/blob/master/JYIM/chatdetail.png" width = "50%"/>
+</figure>
 
-![image](https://github.com/wubing3688/JYIM/blob/master/JYIM/chatdetail.png)
+
+
