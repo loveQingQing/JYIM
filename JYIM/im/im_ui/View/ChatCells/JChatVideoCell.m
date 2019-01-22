@@ -38,7 +38,8 @@
 @property (nonatomic, copy) userInfoCallback userInfoCallback;
 //重新发送回调
 @property (nonatomic, copy) sendAgainCallback sendAgainCallback;
-
+//删除回调
+@property (nonatomic, copy) deleteCallback deleteCallback;
 @end
 
 @implementation JChatVideoCell
@@ -89,9 +90,7 @@
     if (!_iconView) {
         _iconView = [[UIImageView alloc]init];
         _iconView.userInteractionEnabled = YES;
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            ViewRadius(_iconView, 25.f);
-        });
+        ViewRadius(_iconView, 25.f);
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(toUserInfo)];
         [_iconView addGestureRecognizer:tap];
         
@@ -332,10 +331,17 @@
 }
 
 
-#pragma mark - 图片长按
+#pragma mark - 视频长按
 - (void)longpressHandle
 {
+    [self becomeFirstResponder];
+    UIMenuController * menuController = [UIMenuController sharedMenuController];
+    menuController.arrowDirection = UIMenuControllerArrowDown;
+    UIMenuItem * deleteItem = [[UIMenuItem alloc]initWithTitle:@"删除" action:@selector(itemDelete:)];
+    menuController.menuItems = @[deleteItem];
     
+    [menuController setTargetRect:CGRectMake(0, 5.f * kAutoSizeScaleY, self.coverView.width, self.coverView.height) inView:self.coverView];
+    [menuController setMenuVisible:YES animated:YES];
 }
 
 #pragma mark - 下载视频在线播放
@@ -350,12 +356,32 @@
     _sendAgainCallback(_videoCellFrameModel.messageInfoModel);
 }
 
--(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback playVideoCallback:(playVideoCallback)playVideoCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback{
+-(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback playVideoCallback:(playVideoCallback)playVideoCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback deleteCallback:(deleteCallback)deleteCallback{
     _sendAgainCallback = sendAgainCallback;
     _playVideoCallback = playVideoCallback;
     _longpressCallback = longpressCallback;
     _userInfoCallback = userInfoCallback;
+    _deleteCallback = deleteCallback;
 }
+
+-(void)itemDelete:(UIMenuController *) menu{
+    _deleteCallback(_videoCellFrameModel.messageInfoModel);
+}
+
+-(BOOL) canBecomeFirstResponder{
+    
+    return YES;
+    
+}
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(itemDelete:))
+    {
+        return YES;
+        
+    }
+    return [super canPerformAction:action withSender:sender];
+}
+
 
 
 - (void)awakeFromNib {

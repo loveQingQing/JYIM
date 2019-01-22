@@ -163,4 +163,9 @@ static ChatAudioPlayTool *instance = nil;
     _audioPlayerdownloadingCallback = audioPlayerdownloadingCallback;
     _audioPlayerdownloadFailedCallback = audioPlayerdownloadFailedCallback;
 }
+-(void)stopPlayWithAudioMessage:(MessageInfoModel *)audioMessage{
+    if (_isPlaying == YES && [_currentMessageInfoModel.messageInfoId isEqualToString:audioMessage.messageInfoId]) {
+        [self stopPlay];
+    }
+}
 @end

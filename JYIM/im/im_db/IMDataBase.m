@@ -256,6 +256,31 @@ static FMDatabaseQueue *queue;
     }];
     return model;
 }
+
+//删除某一条聊天信息
+-(BOOL)deleteMessageWithMeaasgeId:(NSString *)messageId{
+    __block BOOL isSuccess = NO;
+    [queue inDatabase:^(FMDatabase *dealDB) {
+        
+        NSString * sqlStr = [NSString stringWithFormat:@"delete from MessageInfo where messageInfoId = '%@'",messageId];
+        
+        BOOL success = [dealDB executeUpdate:sqlStr];
+        
+        if(success){
+            
+            isSuccess = YES;
+            
+        }else{
+            
+            isSuccess = NO;
+        }
+        
+        
+    }];
+    return isSuccess;
+}
+
+
 //查询最近联系人聊天列表
 -(NSMutableArray *)queryMessageList{
     
@@ -384,6 +409,30 @@ static FMDatabaseQueue *queue;
     [queue inDatabase:^(FMDatabase *dealDB) {
         
         NSString * sqlStr = [NSString stringWithFormat:@"update MessageList set notReadCount = %d where fromUser = '%@' or toUser = '%@'",0,uid,uid];
+        
+        BOOL success = [dealDB executeUpdate:sqlStr];
+        
+        if(success){
+            
+            isSuccess = YES;
+            
+        }else{
+            
+            isSuccess = NO;
+        }
+        
+        
+    }];
+    return isSuccess;
+}
+
+//删除聊天列表某一行
+-(BOOL)deleteMessageListModelWithUserId:(NSString*)uid{
+    
+    __block BOOL isSuccess = NO;
+    [queue inDatabase:^(FMDatabase *dealDB) {
+        
+        NSString * sqlStr = [NSString stringWithFormat:@"delete from MessageList where fromUser = '%@' or toUser = '%@'",uid,uid];
         
         BOOL success = [dealDB executeUpdate:sqlStr];
         

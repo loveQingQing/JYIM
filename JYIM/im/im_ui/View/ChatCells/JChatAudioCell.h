@@ -17,6 +17,10 @@ typedef void(^sendAgainCallback)(MessageInfoModel * audioModel);
 typedef void(^playAudioCallback)(MessageInfoModel * audioModel);
 //消息长按操作回调
 typedef void(^longpressCallback)(LongpressSelectHandleType type,MessageInfoModel *audioModel);
+
+//删除
+typedef void(^deleteCallback)(MessageInfoModel * audioModel);
+
 //进入用户详情
 typedef void(^userInfoCallback)(NSString *userID);
 
@@ -29,7 +33,7 @@ typedef void(^userInfoCallback)(NSString *userID);
 -(void)stopGif;
 
 #pragma mark - 回调
-- (void)sendAgain:(sendAgainCallback)sendAgain playAudio:(playAudioCallback)playAudio longpress:(longpressCallback)longpress toUserInfo:(userInfoCallback)userDetailCallback;
+- (void)sendAgain:(sendAgainCallback)sendAgain playAudio:(playAudioCallback)playAudio longpress:(longpressCallback)longpress toUserInfo:(userInfoCallback)userDetailCallback deleteCallBack:(deleteCallback)deleteCallBack;
 //下载进度
 -(void)showDownLoadProgress:(double)progress;
 

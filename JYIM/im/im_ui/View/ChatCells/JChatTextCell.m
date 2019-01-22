@@ -35,6 +35,8 @@
 @property (nonatomic, copy) userInfoCallback userInfoCallback;
 //重新发送回调
 @property (nonatomic, copy) sendAgainCallback sendAgainCallback;
+//删除回调
+@property (nonatomic, copy) deleteCallback deleteCallback;
 
 @end
 
@@ -91,9 +93,7 @@
     if (!_timeContainer) {
         _timeContainer = [[UIView alloc]init];
         _timeContainer.backgroundColor = UICOLOR_RGB_Alpha(0xcecece, 1);
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            ViewRadius(_timeContainer, 5.f);
-        });
+        ViewRadius(_timeContainer, 5.f);
         [_timeContainer addSubview:self.timeLabel];
     }
     return _timeContainer;
@@ -116,8 +116,8 @@
         _backImgView = [[UIImageView alloc]init];
         _backImgView.userInteractionEnabled = YES;
         //长按手势
-//        UILongPressGestureRecognizer *longpress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longpressHandle)];
-//        [_backImgView addGestureRecognizer:longpress];
+        UILongPressGestureRecognizer *longpress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longpressHandle)];
+        [_backImgView addGestureRecognizer:longpress];
         [_backImgView addSubview:self.contentLabel];
     }
     return _backImgView;
@@ -129,9 +129,7 @@
     if (!_iconView) {
         _iconView = [[UIImageView alloc]init];
         _iconView.userInteractionEnabled = YES;
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            ViewRadius(_iconView,25);
-        });
+        ViewRadius(_iconView,25);
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(toUserInfo)];
         [_iconView addGestureRecognizer:tap];
         
@@ -199,7 +197,15 @@
 #pragma mark - 消息长按
 - (void)longpressHandle
 {
+    [self becomeFirstResponder];
+    UIMenuController * menuController = [UIMenuController sharedMenuController];
+    menuController.arrowDirection = UIMenuControllerArrowDown;
+    UIMenuItem * deleteItem = [[UIMenuItem alloc]initWithTitle:@"删除" action:@selector(itemDelete:)];
+    UIMenuItem * copyItem = [[UIMenuItem alloc]initWithTitle:@"复制" action:@selector(itemCopy:)];
+    menuController.menuItems = @[deleteItem,copyItem];
     
+    [menuController setTargetRect:CGRectMake(0, 5.f * kAutoSizeScaleY, self.backImgView.width, self.backImgView.height) inView:self.backImgView];
+    [menuController setMenuVisible:YES animated:YES];
 }
 
 #pragma mark - 进入个人资料详情
@@ -218,12 +224,35 @@
 }
 
 
--(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback
+-(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback deleteCallBack:(deleteCallback)deleteCallBack
 {
     _sendAgainCallback = sendAgainCallback;
     _longpressCallback = longpressCallback;
     _userInfoCallback = userInfoCallback;
+    _deleteCallback = deleteCallBack;
     
+}
+
+-(void)itemDelete:(UIMenuController *) menu{
+    _deleteCallback(_textCellFrameModel.messageInfoModel);
+}
+-(void)itemCopy:(UIMenuController *) menu{
+
+    UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+    pasteBoard.string = _textCellFrameModel.messageInfoModel.messageText;
+}
+-(BOOL) canBecomeFirstResponder{
+    
+    return YES;
+    
+}
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(itemDelete:) || action == @selector(itemCopy:))
+    {
+        return YES;
+        
+    }
+    return [super canPerformAction:action withSender:sender];
 }
 
 - (void)awakeFromNib {

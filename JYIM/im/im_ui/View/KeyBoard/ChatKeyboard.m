@@ -15,6 +15,7 @@
 #import "TZImageManager.h"
 #import "TZImagePickerController.h"
 #import "JChatLocationViewController.h"
+//#import "JChatEmotionTextView.h"
 
 @interface ChatHandleButton : UIButton
 @end
@@ -444,13 +445,14 @@
 #pragma mark - 手指回到录音按钮 , 松开
 - (void)audioLpButtonTouchUpInside:(UIButton *)audioLpButton
 {
+    WS(weakSelf)
     [self.recordTool stopRecord:^(NSData *audioData, NSInteger seconds) {
         
         //回调语音消息
         ChatAlbumModel *audio = [[ChatAlbumModel alloc]init];
         audio.audioData = audioData;
         audio.duration   = [@(seconds)stringValue];
-        _audioCallback(audio);
+        weakSelf.audioCallback(audio);
     }];
     //手动释放一下,每次录音创建新的蒙板,避免过多处理 定时器和子控件逻辑
     self.recordTool = nil;
@@ -670,14 +672,7 @@
         
     }else{ //点击表情
         
-//        //获取光标所在位置
-//        NSInteger location = self.msgTextView.selectedRange.location;
-//        //变为可变字符串
-//        NSMutableString *txtStrM = [[NSMutableString alloc]initWithString:self.msgTextView.text];
-//        [txtStrM insertString:emotionName atIndex:location];
-//        self.msgTextView.text = txtStrM;
-//        //光标后移
-//        self.msgTextView.selectedRange = NSMakeRange(location + emotionName.length, 0);
+
         NSLog(@"--------当前点击了表情 : ------------------%@",emotionName);
         
         NSMutableAttributedString *oldmsgAttributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.msgTextView.attributedText];

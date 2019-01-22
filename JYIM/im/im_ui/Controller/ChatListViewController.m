@@ -114,6 +114,35 @@
     [self.navigationController pushViewController:chatVc animated:YES];
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+   
+        return YES;
+   }
+
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+    
+}
+
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+       if (editingStyle == UITableViewCellEditingStyleDelete) {
+           MessageListModel * seletedMessageModel = self.messagesArray[indexPath.row];
+          BOOL success = [[IMClientManager sharedInstance].imDB deleteMessageListModelWithUserId:[seletedMessageModel.fromUser isEqualToString:[IMClientManager sharedInstance].uid]?seletedMessageModel.toUser:seletedMessageModel.fromUser];
+           if (success) {
+               [self getMessages];
+               [self.chatlistTableView reloadData];
+           }
+           
+       }}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+      return @"删除";
+    
+}
+    
+
 
 #pragma mark -  IMClientManagerDelegate 接收消息代理
 

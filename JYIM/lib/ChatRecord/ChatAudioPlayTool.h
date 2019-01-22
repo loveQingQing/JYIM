@@ -33,4 +33,7 @@ typedef void(^audioPlayerdownloadFailedCallback)(MessageInfoModel * theAudioMode
 -(void)stopPlay;
 -(void)audioPlayerWillPlayCallback:(audioPlayerWillPlayCallback)audioPlayerWillPlayCallback audioPlayerPauseCallback:(audioPlayerPauseCallback)audioPlayerPauseCallback audioPlayerFinishCallback:(audioPlayerFinishCallback)audioPlayerFinishCallback audioPlayerdownloadingCallback:(audioPlayerdownloadingCallback)audioPlayerdownloadingCallback audioPlayerdownloadFailedCallback:(audioPlayerdownloadFailedCallback)audioPlayerdownloadFailedCallback;
 
+//如果当前正在播放的是此声音模型，暂停其播放
+-(void)stopPlayWithAudioMessage:(MessageInfoModel *)audioMessage;
+
 @end

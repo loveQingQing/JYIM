@@ -40,6 +40,9 @@
 //重新发送回调
 @property (nonatomic, copy) sendAgainCallback sendAgainCallback;
 
+//删除回调
+@property (nonatomic, copy) deleteCallback deleteCallback;
+
 @end
 
 @implementation JChatAudioCell
@@ -75,9 +78,7 @@
 {
     if (!_redPoint) {
         _redPoint = [[UILabel alloc]init];
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            ViewRadius(_redPoint, 4.f);
-        });
+        ViewRadius(_redPoint, 4.f);
         _redPoint.backgroundColor = [UIColor redColor];
     }
     return _redPoint;
@@ -120,9 +121,8 @@
     if (!_timeContainer) {
         _timeContainer = [[UIView alloc]init];
         _timeContainer.backgroundColor = UICOLOR_RGB_Alpha(0xcecece, 1);
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            ViewRadius(_timeContainer, 5.f);
-        });
+        ViewRadius(_timeContainer, 5.f);
+        
         [_timeContainer addSubview:self.timeLabel];
     }
     return _timeContainer;
@@ -297,12 +297,13 @@
 }
 
 #pragma mark - 回调
-- (void)sendAgain:(sendAgainCallback)sendAgain playAudio:(playAudioCallback)playAudio longpress:(longpressCallback)longpress toUserInfo:(userInfoCallback)userDetailCallback
+- (void)sendAgain:(sendAgainCallback)sendAgain playAudio:(playAudioCallback)playAudio longpress:(longpressCallback)longpress toUserInfo:(userInfoCallback)userDetailCallback deleteCallBack:(deleteCallback)deleteCallBack
 {
     _sendAgainCallback = sendAgain;
     _playCallback          = playAudio;
     _longpressCallback  = longpress;
     _userInfoCallback    = userDetailCallback;
+    _deleteCallback = deleteCallBack;
 }
 
 
@@ -315,7 +316,14 @@
 #pragma mark - 语音长按
 - (void)longpressHandle
 {
+    [self becomeFirstResponder];
+    UIMenuController * menuController = [UIMenuController sharedMenuController];
+    menuController.arrowDirection = UIMenuControllerArrowDown;
+    UIMenuItem * deleteItem = [[UIMenuItem alloc]initWithTitle:@"删除" action:@selector(itemDelete:)];
+    menuController.menuItems = @[deleteItem];
     
+    [menuController setTargetRect:CGRectMake(0, 5.f * kAutoSizeScaleY, self.backImageView.width, self.backImageView.height) inView:self.backImageView];
+    [menuController setMenuVisible:YES animated:YES];
 }
 
 #pragma mark - 进入用户详情
@@ -324,6 +332,24 @@
     if (_audioCellFrameModel.messageInfoModel.byMySelf == NO) {
         _userInfoCallback(_audioCellFrameModel.messageInfoModel.fromUser);
     }
+}
+
+-(void)itemDelete:(UIMenuController *) menu{
+    _deleteCallback(_audioCellFrameModel.messageInfoModel);
+}
+
+-(BOOL) canBecomeFirstResponder{
+    
+    return YES;
+    
+}
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(itemDelete:))
+    {
+        return YES;
+        
+    }
+    return [super canPerformAction:action withSender:sender];
 }
 
 

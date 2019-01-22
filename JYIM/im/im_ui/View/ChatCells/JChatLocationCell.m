@@ -38,6 +38,9 @@
 //重新发送回调
 @property (nonatomic, copy) sendAgainCallback sendAgainCallback;
 
+//删除回调
+@property (nonatomic, copy) deleteCallback deleteCallback;
+
 @end
 
 @implementation JChatLocationCell
@@ -259,13 +262,13 @@
     [self setContent:locationMessageModel];
 }
 
--(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback showDetailLocationCallback:(showDetailLocationCallback)showDetailLocationCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback{
+-(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback showDetailLocationCallback:(showDetailLocationCallback)showDetailLocationCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback deleteCallback:(nonnull deleteCallback)deleteCallback{
     
     _sendAgainCallback = sendAgainCallback;
     _showDetailLocationCallback = showDetailLocationCallback;
     _longpressCallback = longpressCallback;
     _userInfoCallback = userInfoCallback;
-    
+    _deleteCallback = deleteCallback;
 }
 
 #pragma mark - 单击头像
@@ -277,10 +280,17 @@
 }
 
 
-#pragma mark - 图片长按
+#pragma mark - 地址长按
 - (void)longpressHandle
 {
+    [self becomeFirstResponder];
+    UIMenuController * menuController = [UIMenuController sharedMenuController];
+    menuController.arrowDirection = UIMenuControllerArrowDown;
+    UIMenuItem * deleteItem = [[UIMenuItem alloc]initWithTitle:@"删除" action:@selector(itemDelete:)];
+    menuController.menuItems = @[deleteItem];
     
+    [menuController setTargetRect:CGRectMake(0, 5.f * kAutoSizeScaleY, self.coverView.width, self.coverView.height) inView:self.coverView];
+    [menuController setMenuVisible:YES animated:YES];
 }
 
 #pragma mark - 进入地图界面
@@ -295,7 +305,23 @@
     _sendAgainCallback(_locationCellFrameModel.messageInfoModel);
 }
 
+-(void)itemDelete:(UIMenuController *) menu{
+    _deleteCallback(_locationCellFrameModel.messageInfoModel);
+}
 
+-(BOOL) canBecomeFirstResponder{
+    
+    return YES;
+    
+}
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(itemDelete:))
+    {
+        return YES;
+        
+    }
+    return [super canPerformAction:action withSender:sender];
+}
 
 - (void)awakeFromNib {
     [super awakeFromNib];

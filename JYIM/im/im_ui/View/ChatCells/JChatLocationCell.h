@@ -23,7 +23,10 @@ typedef void(^longpressCallback)(LongpressSelectHandleType type,MessageInfoModel
 //进入用户详情
 typedef void(^userInfoCallback)(NSString *userID);
 
--(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback showDetailLocationCallback:(showDetailLocationCallback)showDetailLocationCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback;
+//删除
+typedef void(^deleteCallback)(MessageInfoModel * locationMessageModel);
+
+-(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback showDetailLocationCallback:(showDetailLocationCallback)showDetailLocationCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback deleteCallback:(deleteCallback)deleteCallback;
 
 @end
 

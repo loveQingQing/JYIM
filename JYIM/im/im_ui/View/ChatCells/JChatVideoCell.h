@@ -21,10 +21,12 @@ typedef void(^playVideoCallback)(MessageInfoModel * videoMessageModel);
 typedef void(^longpressCallback)(LongpressSelectHandleType type,MessageInfoModel *videoMessageModel);
 //进入用户详情
 typedef void(^userInfoCallback)(NSString *userID);
+//删除
+typedef void(^deleteCallback)(MessageInfoModel * videoMessageModel);
 
 @property (nonatomic, strong) JChatVideoCellFrameModel * videoCellFrameModel;
 
--(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback playVideoCallback:(playVideoCallback)playVideoCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback;
+-(void)sendAgainCallback:(sendAgainCallback)sendAgainCallback playVideoCallback:(playVideoCallback)playVideoCallback longpressCallback:(longpressCallback)longpressCallback userInfoCallback:(userInfoCallback)userInfoCallback deleteCallback:(deleteCallback)deleteCallback;
 
 @end
 

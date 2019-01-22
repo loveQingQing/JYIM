@@ -79,6 +79,7 @@
 		0A69B56D21E6F2E200EAE1BF /* MJRefreshAutoFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A69B55621E6F2E200EAE1BF /* MJRefreshAutoFooter.m */; };
 		0A69B56E21E6F2E200EAE1BF /* MJRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A69B55821E6F2E200EAE1BF /* MJRefreshComponent.m */; };
 		0A69B57121E7107E00EAE1BF /* nav_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A69B57021E7107E00EAE1BF /* nav_back.png */; };
+		0A6E439021F5A7E600EB43CA /* JChatEmotionTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6E438F21F5A7E600EB43CA /* JChatEmotionTextView.m */; };
 		0A7AC8D621EEDA160023D4A6 /* JChatImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7AC8D521EEDA160023D4A6 /* JChatImageCell.m */; };
 		0A7AC8D921EEE2B70023D4A6 /* JChatImageCellFrameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7AC8D821EEE2B70023D4A6 /* JChatImageCellFrameModel.m */; };
 		0A87516321F2A09500E3B52A /* JChatLocationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A87516221F2A09500E3B52A /* JChatLocationCell.m */; };
@@ -345,6 +346,8 @@
 		0A69B55921E6F2E200EAE1BF /* MJRefreshFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefreshFooter.h; sourceTree = "<group>"; };
 		0A69B55A21E6F2E200EAE1BF /* MJRefreshBackFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefreshBackFooter.h; sourceTree = "<group>"; };
 		0A69B57021E7107E00EAE1BF /* nav_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nav_back.png; sourceTree = "<group>"; };
+		0A6E438E21F5A7E600EB43CA /* JChatEmotionTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JChatEmotionTextView.h; sourceTree = "<group>"; };
+		0A6E438F21F5A7E600EB43CA /* JChatEmotionTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JChatEmotionTextView.m; sourceTree = "<group>"; };
 		0A7AC8D421EEDA160023D4A6 /* JChatImageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JChatImageCell.h; sourceTree = "<group>"; };
 		0A7AC8D521EEDA160023D4A6 /* JChatImageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JChatImageCell.m; sourceTree = "<group>"; };
 		0A7AC8D721EEE2B70023D4A6 /* JChatImageCellFrameModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JChatImageCellFrameModel.h; sourceTree = "<group>"; };
@@ -987,6 +990,8 @@
 				0A8FF3B321E5D19800C5C695 /* ChatKeyboard.m */,
 				0A4CFDC921E9CDD000D0725B /* EmotionTextAttachment.h */,
 				0A4CFDCA21E9CDD000D0725B /* EmotionTextAttachment.m */,
+				0A6E438E21F5A7E600EB43CA /* JChatEmotionTextView.h */,
+				0A6E438F21F5A7E600EB43CA /* JChatEmotionTextView.m */,
 			);
 			path = KeyBoard;
 			sourceTree = "<group>";
@@ -1578,6 +1583,7 @@
 				0A8FF41221E5D72D00C5C695 /* SDWebImageDecoder.m in Sources */,
 				0A4E222721ED5D8B008246FA /* AFURLRequestSerialization.m in Sources */,
 				0AD24EA721E2F80200A11261 /* FMDatabase.m in Sources */,
+				0A6E439021F5A7E600EB43CA /* JChatEmotionTextView.m in Sources */,
 				0A69B56D21E6F2E200EAE1BF /* MJRefreshAutoFooter.m in Sources */,
 				0A8FF41121E5D72D00C5C695 /* SDWebImageManager.m in Sources */,
 				0AD7281121F02ADE009B7340 /* MWPhotoBrowser.m in Sources */,
@@ -1846,7 +1852,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = R8RJW6M9W2;
+				DEVELOPMENT_TEAM = 33Y47CK6SN;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1867,9 +1873,9 @@
 					"$(PROJECT_DIR)/JYIM/lib/BaiduMap/thirdlibs",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.houseLoan.cn;
+				PRODUCT_BUNDLE_IDENTIFIER = com.exerciseCoach.cn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = houseLoan_develop_profile;
+				PROVISIONING_PROFILE_SPECIFIER = exerciseCoach_develop_profile;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1901,7 +1907,7 @@
 					"$(PROJECT_DIR)/JYIM/lib/BaiduMap/thirdlibs",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.houseLoan.cn;
+				PRODUCT_BUNDLE_IDENTIFIER = com.exerciseCoach.cn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = exerciseCoach_distribution_profile;
 				TARGETED_DEVICE_FAMILY = "1,2";

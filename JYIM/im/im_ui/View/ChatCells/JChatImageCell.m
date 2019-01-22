@@ -39,6 +39,9 @@
 //重新发送回调
 @property (nonatomic, copy) sendAgainCallback sendAgainCallback;
 
+//删除回调
+@property (nonatomic, copy) deleteCallback deleteCallback;
+
 @end
 
 @implementation JChatImageCell
@@ -68,9 +71,7 @@
     if (!_timeContainer) {
         _timeContainer = [[UIView alloc]init];
         _timeContainer.backgroundColor = UICOLOR_RGB_Alpha(0xcecece, 1);
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            ViewRadius(_timeContainer, 5.f);
-        });
+        ViewRadius(_timeContainer, 5.f);
         [_timeContainer addSubview:self.timeLabel];
     }
     return _timeContainer;
@@ -321,7 +322,14 @@
 #pragma mark - 图片长按
 - (void)longpressHandle
 {
+    [self becomeFirstResponder];
+    UIMenuController * menuController = [UIMenuController sharedMenuController];
+    menuController.arrowDirection = UIMenuControllerArrowDown;
+    UIMenuItem * deleteItem = [[UIMenuItem alloc]initWithTitle:@"删除" action:@selector(itemDelete:)];
+    menuController.menuItems = @[deleteItem];
     
+    [menuController setTargetRect:CGRectMake(0, 5.f * kAutoSizeScaleY, self.coverView.width, self.coverView.height) inView:self.coverView];
+    [menuController setMenuVisible:YES animated:YES];
 }
 
 #pragma mark - 重新发送
@@ -334,12 +342,32 @@
 }
 
 #pragma mark - 回调
-- (void)sendAgain:(sendAgainCallback)sendAgain showBigPicCallback:(showBigPicCallback)showBigPicCallback longpressCallback:(longpressCallback)longpressCallback toUserInfo:(userInfoCallback)userDetailCallback{
+- (void)sendAgain:(sendAgainCallback)sendAgain showBigPicCallback:(showBigPicCallback)showBigPicCallback longpressCallback:(longpressCallback)longpressCallback toUserInfo:(userInfoCallback)userDetailCallback deleteCallback:(deleteCallback)deleteCallback{
     _sendAgainCallback = sendAgain;
     _showBigPicCallback = showBigPicCallback;
     _longpressCallback = longpressCallback;
     _userInfoCallback = userDetailCallback;
+    _deleteCallback = deleteCallback;
 }
+
+-(void)itemDelete:(UIMenuController *) menu{
+    _deleteCallback(_imageCellFrameModel.messageInfoModel);
+}
+
+-(BOOL) canBecomeFirstResponder{
+    
+    return YES;
+    
+}
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(itemDelete:))
+    {
+        return YES;
+        
+    }
+    return [super canPerformAction:action withSender:sender];
+}
+
 
 - (void)awakeFromNib {
     [super awakeFromNib];

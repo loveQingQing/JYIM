@@ -182,6 +182,7 @@
         [moreCellFrameModelArr addObject:cellFrameModel];
     }
     
+    NSInteger scrollToIndex = [self.datas count];
     
     NSMutableIndexSet  *indexes = [NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0, messageArr.count)];
     [self.cellFrameModelArr insertObjects:moreCellFrameModelArr atIndexes:indexes];
@@ -190,6 +191,7 @@
 
     [self.tableView reloadData];
     [self.refreshHeader endRefreshing];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.datas count] - scrollToIndex - 1 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     if (messageArr.count == 0 || (messageArr.count != 0 && messageArr.count % _limit != 0)) {
         _tableView.mj_header = nil;
     }
@@ -541,6 +543,7 @@
         }
         cell.textCellFrameModel = self.cellFrameModelArr[indexPath.row];
         [cell sendAgainCallback:^(MessageInfoModel * _Nonnull textMessageModel) {
+            NSIndexPath * theIndexPath = indexPath;
             __block MessageInfoModel * tMessageModel = textMessageModel;
             NSDictionary * paraDic = @{@"content":tMessageModel.messageText,@"time":tMessageModel.sendTime,@"urlimg":@"",@"urlfile":@"",@"lon":@"",@"lat":@""};
             //发送文本
@@ -552,13 +555,23 @@
                 tMessageModel.sendStatus = @"0";
             }
             [weakSelf.tableView beginUpdates];
-            [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [weakSelf.tableView reloadRowsAtIndexPaths:@[theIndexPath] withRowAnimation:UITableViewRowAnimationNone];
             [weakSelf.tableView endUpdates];
             
         } longpressCallback:^(LongpressSelectHandleType type, MessageInfoModel * _Nonnull textMessageModel) {
             
         } userInfoCallback:^(NSString * _Nonnull userID) {
             
+        } deleteCallBack:^(MessageInfoModel * _Nonnull textMessageModel) {
+             NSIndexPath * theIndexPath = indexPath;
+          BOOL success = [[IMClientManager sharedInstance].imDB deleteMessageWithMeaasgeId:textMessageModel.messageInfoId];
+            if (success) {
+                [weakSelf.tableView beginUpdates];
+                [weakSelf.datas removeObjectAtIndex:theIndexPath.row];
+                [weakSelf.cellFrameModelArr removeObjectAtIndex:theIndexPath.row];
+                [weakSelf.tableView deleteRowsAtIndexPaths:@[theIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf.tableView endUpdates];
+            }
         }];
         return cell;
         
@@ -672,6 +685,42 @@
             
         } toUserInfo:^(NSString * _Nonnull userID) {
             
+        } deleteCallBack:^(MessageInfoModel * _Nonnull audioModel) {
+            NSIndexPath * theIndexPath = indexPath;
+            if (![audioModel.sendStatus isEqualToString:@"2"]) {
+                [[ChatAudioPlayTool sharedInstance] stopPlayWithAudioMessage:audioModel];
+                BOOL success = [[IMClientManager sharedInstance].imDB deleteMessageWithMeaasgeId:audioModel.messageInfoId];
+                if (success) {
+                    [weakSelf.tableView beginUpdates];
+                    [weakSelf.datas removeObjectAtIndex:theIndexPath.row];
+                    [weakSelf.cellFrameModelArr removeObjectAtIndex:theIndexPath.row];
+                    [weakSelf.tableView deleteRowsAtIndexPaths:@[theIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [weakSelf.tableView endUpdates];
+                    //删除本地音频资源
+                    NSFileManager * fn = [NSFileManager defaultManager];
+                    if(audioModel.byMySelf == YES){
+                       NSString * audioPath = [NSString stringWithFormat:@"%@/%@/%@",ChatCache_Path,audioModel.toUser,audioModel.audioName];
+                        if ([fn fileExistsAtPath:audioPath]) {
+                            NSError * audioRemoveError;
+                            [fn removeItemAtPath:audioPath error:&audioRemoveError];
+                            if (audioRemoveError) {
+                                NSLog(@"移除声音文件错误%@",audioRemoveError);
+                            }
+                        }
+                    }else{
+                        NSString * audioPath = [NSString stringWithFormat:@"%@/%@/%@",ChatCache_Path,audioModel.fromUser,audioModel.audioName];
+                        if ([fn fileExistsAtPath:audioPath]) {
+                            NSError * audioRemoveError;
+                            [fn removeItemAtPath:audioPath error:&audioRemoveError];
+                            if (audioRemoveError) {
+                                NSLog(@"移除声音文件错误%@",audioRemoveError);
+                            }
+                        }
+                    }
+                }
+            }else{
+                NSLog(@"此声音文件正在上传,稍后删除");
+            }
         }];
         return cell;
     }else if ([cellFrameModel isKindOfClass:[JChatImageCellFrameModel class]]){
@@ -781,6 +830,42 @@
            
             
         } toUserInfo:^(NSString *userID) {
+            
+        } deleteCallback:^(MessageInfoModel *picMessageModel) {
+            NSIndexPath * theIndexPath = indexPath;
+            if ([picMessageModel.sendStatus isEqualToString:@"2"]) {
+                NSLog(@"此图片文件正在上传,稍后删除");
+            }else{
+                BOOL success = [[IMClientManager sharedInstance].imDB deleteMessageWithMeaasgeId:picMessageModel.messageInfoId];
+                if (success) {
+                    [weakSelf.tableView beginUpdates];
+                    [weakSelf.datas removeObjectAtIndex:theIndexPath.row];
+                    [weakSelf.cellFrameModelArr removeObjectAtIndex:theIndexPath.row];
+                    [weakSelf.tableView deleteRowsAtIndexPaths:@[theIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [weakSelf.tableView endUpdates];
+                    
+                    NSFileManager * fn = [NSFileManager defaultManager];
+                    if (picMessageModel.byMySelf == YES) {
+                        NSString * picPath = [NSString stringWithFormat:@"%@/%@/%@",ChatCache_Path,picMessageModel.toUser,picMessageModel.picName];
+                        if ([fn fileExistsAtPath:picPath]) {
+                            NSError * removePicError;
+                            [fn removeItemAtPath:picPath error:&removePicError];
+                            if (removePicError) {
+                                NSLog(@"图片移除失败%@",removePicError);
+                            }
+                        }
+                    }else{
+                        NSString * picPath = [NSString stringWithFormat:@"%@/%@/%@",ChatCache_Path,picMessageModel.fromUser,picMessageModel.picName];
+                        if ([fn fileExistsAtPath:picPath]) {
+                            NSError * removePicError;
+                            [fn removeItemAtPath:picPath error:&removePicError];
+                            if (removePicError) {
+                                NSLog(@"图片移除失败%@",removePicError);
+                            }
+                        }
+                    }
+                }
+            }
             
         }];
         return cell;
@@ -897,6 +982,41 @@
             
         } userInfoCallback:^(NSString * _Nonnull userID) {
             
+        } deleteCallback:^(MessageInfoModel * _Nonnull videoMessageModel) {
+            NSIndexPath * theIndexPath = indexPath;
+            if ([videoMessageModel.sendStatus isEqualToString:@"2"]) {
+                NSLog(@"视频文件正在上传，稍后再删");
+            }else{
+                
+                BOOL success = [[IMClientManager sharedInstance].imDB deleteMessageWithMeaasgeId:videoMessageModel.messageInfoId];
+                if (success) {
+                    [weakSelf.tableView beginUpdates];
+                    [weakSelf.datas removeObjectAtIndex:theIndexPath.row];
+                    [weakSelf.cellFrameModelArr removeObjectAtIndex:theIndexPath.row];
+                    [weakSelf.tableView deleteRowsAtIndexPaths:@[theIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [weakSelf.tableView endUpdates];
+                    
+                    NSFileManager * fn = [NSFileManager defaultManager];
+                    if (videoMessageModel.byMySelf == YES) {
+                        //获取本地资源缓存路径
+                        NSString *coverimgCachePath = [ChatCache_Path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@_cover.jpg",videoMessageModel.toUser,videoMessageModel.messageInfoId]];
+                        if ([fn fileExistsAtPath:coverimgCachePath]) {
+                            [fn removeItemAtPath:coverimgCachePath error:nil];
+                        }
+                         NSString *videoCachePath = [ChatCache_Path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",weakSelf.uid,videoMessageModel.videoName]];
+                        if ([fn fileExistsAtPath:videoCachePath]) {
+                            [fn removeItemAtPath:videoCachePath error:nil];
+                        }
+                    }else{
+                        //获取本地资源缓存路径
+                        NSString *coverimgCachePath = [ChatCache_Path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@_cover.jpg",videoMessageModel.fromUser,videoMessageModel.messageInfoId]];
+                        if ([fn fileExistsAtPath:coverimgCachePath]) {
+                            [fn removeItemAtPath:coverimgCachePath error:nil];
+                        }
+                       
+                    }
+                }
+            }
         }];
         return cell;
         
@@ -935,6 +1055,16 @@
             
         } userInfoCallback:^(NSString * _Nonnull userID) {
             
+        } deleteCallback:^(MessageInfoModel * _Nonnull locationMessageModel) {
+            NSIndexPath * theIndexPath = indexPath;
+            BOOL success = [[IMClientManager sharedInstance].imDB deleteMessageWithMeaasgeId:locationMessageModel.messageInfoId];
+            if (success) {
+                [weakSelf.tableView beginUpdates];
+                [weakSelf.datas removeObjectAtIndex:theIndexPath.row];
+                [weakSelf.cellFrameModelArr removeObjectAtIndex:theIndexPath.row];
+                [weakSelf.tableView deleteRowsAtIndexPaths:@[theIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf.tableView endUpdates];
+            }
         }];
         return cell;
     }
@@ -1065,12 +1195,17 @@
 
 -(void)backAction{
     
+    if (self.datas.count == 0) {
+        [[IMClientManager sharedInstance].imDB deleteMessageListModelWithUserId:_uid];
+    }else{
+        MessageInfoModel * lastMessageInfoModel = [self.datas lastObject];
+        [[IMClientManager sharedInstance].imDB insertOrUpdateContactWithMessageId:lastMessageInfoModel.messageInfoId fromUser:lastMessageInfoModel.fromUser toUser:lastMessageInfoModel.toUser messageType:lastMessageInfoModel.messageType sendTime:lastMessageInfoModel.sendTime byMySelf:lastMessageInfoModel.byMySelf notReadCount:0 messageText:lastMessageInfoModel.messageText];
+    }
     [[ChatAudioPlayTool sharedInstance] stopPlay];
     [[IMClientManager sharedInstance] removeDelegate:self];
     [IMClientManager sharedInstance].inChatRoomWithUid = nil;
     
     [[IMClientManager sharedInstance].imDB updateMessageListModelHasReadByMyselfWithUserId:_uid];
-    
     if (_backBlock) {
         _backBlock();
     }

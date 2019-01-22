@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 //更改收到的语音消息为已读状态
 -(BOOL)updateAudioMessageInfoReadStatusWithMessageId:(NSString*)messageId;
 
+//删除某一条聊天信息
+-(BOOL)deleteMessageWithMeaasgeId:(NSString *)messageId;
+
 //查询最近联系人聊天列表
 -(NSMutableArray *)queryMessageList;
 
@@ -44,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 //未读数清零
 -(BOOL)updateMessageListModelHasReadByMyselfWithUserId:(NSString*)uid;
 
+//删除聊天列表某一行
+-(BOOL)deleteMessageListModelWithUserId:(NSString*)uid;
 
 @end
 
