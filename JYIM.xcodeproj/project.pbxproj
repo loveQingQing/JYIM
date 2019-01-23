@@ -648,20 +648,20 @@
 		0A4E221521ED5D8B008246FA /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				0A4E221621ED5D8B008246FA /* AFSecurityPolicy.h */,
-				0A4E221721ED5D8B008246FA /* AFNetworkReachabilityManager.h */,
-				0A4E221821ED5D8B008246FA /* AFURLSessionManager.h */,
-				0A4E221921ED5D8B008246FA /* AFURLRequestSerialization.h */,
-				0A4E221A21ED5D8B008246FA /* AFURLResponseSerialization.m */,
-				0A4E221B21ED5D8B008246FA /* AFHTTPSessionManager.m */,
-				0A4E221C21ED5D8B008246FA /* AFURLResponseSerialization.h */,
-				0A4E221D21ED5D8B008246FA /* AFURLSessionManager.m */,
-				0A4E221E21ED5D8B008246FA /* AFURLRequestSerialization.m */,
 				0A4E221F21ED5D8B008246FA /* AFNetworking.h */,
-				0A4E222021ED5D8B008246FA /* AFNetworkReachabilityManager.m */,
+				0A4E221621ED5D8B008246FA /* AFSecurityPolicy.h */,
 				0A4E222121ED5D8B008246FA /* AFSecurityPolicy.m */,
-				0A4E222221ED5D8B008246FA /* AFCompatibilityMacros.h */,
+				0A4E221721ED5D8B008246FA /* AFNetworkReachabilityManager.h */,
+				0A4E222021ED5D8B008246FA /* AFNetworkReachabilityManager.m */,
+				0A4E221821ED5D8B008246FA /* AFURLSessionManager.h */,
+				0A4E221D21ED5D8B008246FA /* AFURLSessionManager.m */,
+				0A4E221921ED5D8B008246FA /* AFURLRequestSerialization.h */,
+				0A4E221E21ED5D8B008246FA /* AFURLRequestSerialization.m */,
+				0A4E221C21ED5D8B008246FA /* AFURLResponseSerialization.h */,
+				0A4E221A21ED5D8B008246FA /* AFURLResponseSerialization.m */,
 				0A4E222321ED5D8B008246FA /* AFHTTPSessionManager.h */,
+				0A4E221B21ED5D8B008246FA /* AFHTTPSessionManager.m */,
+				0A4E222221ED5D8B008246FA /* AFCompatibilityMacros.h */,
 			);
 			path = AFNetworking;
 			sourceTree = "<group>";
@@ -669,13 +669,13 @@
 		0A4E222A21ED5DAD008246FA /* YYCache */ = {
 			isa = PBXGroup;
 			children = (
-				0A4E222B21ED5DAD008246FA /* YYDiskCache.m */,
-				0A4E222C21ED5DAD008246FA /* YYKVStorage.h */,
-				0A4E222D21ED5DAD008246FA /* YYCache.m */,
-				0A4E222E21ED5DAD008246FA /* YYMemoryCache.h */,
 				0A4E222F21ED5DAD008246FA /* YYDiskCache.h */,
+				0A4E222B21ED5DAD008246FA /* YYDiskCache.m */,
 				0A4E223021ED5DAD008246FA /* YYCache.h */,
+				0A4E222D21ED5DAD008246FA /* YYCache.m */,
+				0A4E222C21ED5DAD008246FA /* YYKVStorage.h */,
 				0A4E223121ED5DAD008246FA /* YYKVStorage.m */,
+				0A4E222E21ED5DAD008246FA /* YYMemoryCache.h */,
 				0A4E223221ED5DAD008246FA /* YYMemoryCache.m */,
 			);
 			path = YYCache;

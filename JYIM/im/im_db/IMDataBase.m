@@ -220,7 +220,7 @@ static FMDatabaseQueue *queue;
 
 //通过theFingerPrint(指纹)查找消息
 -(MessageInfoModel *)queryMessageInfoModelWithMessageInfoId:(NSString *)messageId{
-    __block MessageInfoModel * model = [[MessageInfoModel alloc]init];
+     MessageInfoModel * model = [[MessageInfoModel alloc]init];
     [queue inDatabase:^(FMDatabase *dealDB) {
        
         NSString * sql = [NSString stringWithFormat:@"select * from MessageInfo where messageInfoId = '%@' ",messageId];
@@ -314,7 +314,7 @@ static FMDatabaseQueue *queue;
 //查询是否存在某个最近联系人
 -(NSMutableDictionary *)_existThisContactWithUid:(NSString *)contactUid{
     
-    __block NSMutableDictionary * resultDic = [NSMutableDictionary dictionary];
+     NSMutableDictionary * resultDic = [NSMutableDictionary dictionary];
     [queue inDatabase:^(FMDatabase *dealDB) {
         
         NSString *sql = [NSString stringWithFormat:@"SELECT * FROM MessageList WHERE fromUser = '%@' or toUser = '%@'",contactUid,contactUid];
