@@ -11,7 +11,7 @@
 /* ---  服务器使用判断  --- */
 #if DevelopSever
 /** 接口前缀-开发服务器*/
-NSString *const kApiPrefix = @"http://192.168.0.181/";
+NSString *const kApiPrefix = @"http://192.168.0.182/";
 
 #elif ProductSever
 /** 接口前缀-生产服务器*/

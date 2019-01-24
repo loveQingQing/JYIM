@@ -37,7 +37,7 @@
 
 
 -(void)delayMethod{
-    [[IMClientManager sharedInstance] sendTextMessageWithStr:@"文本消息" toUserId:@"156"];
+    [[IMClientManager sharedInstance] sendTextMessageWithStr:@"文本消息" toUserId:@"189"];
     self.btn.backgroundColor = [UIColor redColor];
     self.btn.userInteractionEnabled = YES;
 }

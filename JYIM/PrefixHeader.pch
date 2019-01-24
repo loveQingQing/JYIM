@@ -34,8 +34,8 @@
 #endif
 
 
-#define ServerIP  @"rbcore.52im.net"
-//#define ServerIP  @"192.168.0.182"
+//#define ServerIP  @"rbcore.52im.net"
+#define ServerIP  @"192.168.0.182"
 #define ServerPort @"7901"
 
 #define CurAppDelegate ((AppDelegate*)[[UIApplication sharedApplication] delegate])

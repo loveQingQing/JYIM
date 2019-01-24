@@ -187,7 +187,7 @@
 }
 -(void)sendAction
 {
-    if(_locationMessageSendBlock){
+    if(_locationMessageSendBlock && _lat != nil && _lon != nil && _locationDetailStr != nil){
         _locationMessageSendBlock(_lat,_lon,_locationDetailStr);
     }
     [self.navigationController popViewControllerAnimated:YES];
