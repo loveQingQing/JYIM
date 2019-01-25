@@ -21,7 +21,7 @@
     // init MobileIMSDK first
     // 提示：在不退出APP的情况下退出登陆后再重新登陆时，请确保调用本方法一次，不然会报code=203错误哦！
     [[IMClientManager sharedInstance] initMobileIMSDK];
-    [[IMClientManager sharedInstance] doLoginWithUid:@"1565" withToken:@"123456"];
+    [[IMClientManager sharedInstance] doLoginWithUid:@"189" withToken:@"123456"];
     
     return YES;
 }

@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGSize  picSize;
 
 //视频 , 语音时长
-@property (nonatomic, copy) NSString * duration;
+@property (nonatomic, copy) NSString * duration;//ms
 
 @property (nonatomic, copy) NSString * videoSize;//视频大小
 

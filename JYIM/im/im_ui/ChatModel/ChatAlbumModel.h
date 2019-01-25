@@ -29,7 +29,7 @@
 @property (nonatomic, strong) PHAsset *videoAsset;
 //视频缩略图
 @property (nonatomic, strong) UIImage *videoCoverImg;
-//视频 , 语音时长
+//视频 , 语音时长 ms
 @property (nonatomic, copy) NSString *duration;
 
 @end

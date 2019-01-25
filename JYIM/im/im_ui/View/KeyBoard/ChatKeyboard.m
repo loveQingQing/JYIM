@@ -451,7 +451,7 @@
         //回调语音消息
         ChatAlbumModel *audio = [[ChatAlbumModel alloc]init];
         audio.audioData = audioData;
-        audio.duration   = [@(seconds)stringValue];
+        audio.duration   = [@(seconds * 1000)stringValue];//为跟安卓统一改为 ms
         weakSelf.audioCallback(audio);
     }];
     //手动释放一下,每次录音创建新的蒙板,避免过多处理 定时器和子控件逻辑

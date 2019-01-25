@@ -89,7 +89,7 @@
             
         case 2:
         {
-            NSMutableAttributedString * theContentText = [[NSMutableAttributedString alloc] initWithString:@"[ 图片 ]"];
+            NSMutableAttributedString * theContentText = [[NSMutableAttributedString alloc] initWithString:@"[图片]"];
             [theContentText addAttribute:NSForegroundColorAttributeName
                               value:RGB(199, 54, 45)
                               range:NSMakeRange(0, theContentText.length)];
@@ -99,7 +99,7 @@
             
         case 3:
         {
-            NSMutableAttributedString * theContentText = [[NSMutableAttributedString alloc] initWithString:@"[ 视频 ]"];
+            NSMutableAttributedString * theContentText = [[NSMutableAttributedString alloc] initWithString:@"[视频]"];
             [theContentText addAttribute:NSForegroundColorAttributeName
                                    value:RGB(199, 54, 45)
                                    range:NSMakeRange(0, theContentText.length)];
@@ -108,7 +108,7 @@
         }
         case 4:
         {
-            NSMutableAttributedString * theContentText = [[NSMutableAttributedString alloc] initWithString:@"[ 语音 ]"];
+            NSMutableAttributedString * theContentText = [[NSMutableAttributedString alloc] initWithString:@"[语音]"];
             [theContentText addAttribute:NSForegroundColorAttributeName
                                    value:RGB(199, 54, 45)
                                    range:NSMakeRange(0, theContentText.length)];
@@ -117,7 +117,7 @@
         }
         case 5:
         {
-            NSMutableAttributedString * theContentText = [[NSMutableAttributedString alloc] initWithString:@"[ 位置 ]"];
+            NSMutableAttributedString * theContentText = [[NSMutableAttributedString alloc] initWithString:@"[位置]"];
             [theContentText addAttribute:NSForegroundColorAttributeName
                                    value:RGB(199, 54, 45)
                                    range:NSMakeRange(0, theContentText.length)];

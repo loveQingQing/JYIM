@@ -218,7 +218,7 @@
         [self.activiView stopAnimating];
     }
     //秒数
-    self.secondLabel.text = [NSString stringWithFormat:@"%@''",_audioCellFrameModel.messageInfoModel.duration];
+    self.secondLabel.text = [NSString stringWithFormat:@"%.f''",[_audioCellFrameModel.messageInfoModel.duration floatValue]/1000];
     
     //我方
     if (_audioCellFrameModel.messageInfoModel.byMySelf) {

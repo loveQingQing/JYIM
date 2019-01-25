@@ -226,31 +226,32 @@ static IMClientManager *instance = nil;
     if(resultDict == nil){
         return;
     }
+    NSString * sendTime = [resultDict[@"time"] substringWithRange:NSMakeRange(0, 10)];//有可能安卓过来的消息13位，截取10位
     switch (typeu) {
         case 1://文本
         {
-               [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:resultDict[@"content"] sendTime:resultDict[@"time"] sendStatus:@"1" byMySelf:0 hasReceive:1 picName:@"" audioName:@"" videoName:@"" picSize:@"" duration:@"" videoSize:@"" picUrl:@"" audioUrl:@"" videoUrl:@"" lat:@"" lon:@"" hasReadAudio:0];
+               [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:resultDict[@"content"] sendTime:sendTime sendStatus:@"1" byMySelf:0 hasReceive:1 picName:@"" audioName:@"" videoName:@"" picSize:@"" duration:@"" videoSize:@"" picUrl:@"" audioUrl:@"" videoUrl:@"" lat:@"" lon:@"" hasReadAudio:0];
         }
             break;
         case 2://图片
         {
             NSString * picSizeStr = [NSString stringWithFormat:@"{%@}",resultDict[@"content"]];
-            [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:@"" sendTime:resultDict[@"time"] sendStatus:@"1" byMySelf:0 hasReceive:1 picName:[resultDict[@"urlimg"] lastPathComponent] audioName:@"" videoName:@"" picSize:picSizeStr duration:@""  videoSize:@"" picUrl:resultDict[@"urlimg"] audioUrl:@""  videoUrl:@"" lat:@"" lon:@"" hasReadAudio:0];
+            [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:@"" sendTime:sendTime sendStatus:@"1" byMySelf:0 hasReceive:1 picName:[resultDict[@"urlimg"] lastPathComponent] audioName:@"" videoName:@"" picSize:picSizeStr duration:@""  videoSize:@"" picUrl:resultDict[@"urlimg"] audioUrl:@""  videoUrl:@"" lat:@"" lon:@"" hasReadAudio:0];
         }
             break;
         case 3://视频
         {
-            [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:@"" sendTime:resultDict[@"time"] sendStatus:@"1" byMySelf:0 hasReceive:1 picName:[NSString stringWithFormat:@"%@_cover.jpg",fingerPrintOfProtocal] audioName:@"" videoName:[resultDict[@"urlfile"] lastPathComponent]  picSize:@"" duration:@""  videoSize:@"" picUrl:resultDict[@"urlimg"] audioUrl:@""  videoUrl:resultDict[@"urlfile"] lat:@"" lon:@"" hasReadAudio:0];
+            [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:@"" sendTime:sendTime sendStatus:@"1" byMySelf:0 hasReceive:1 picName:[NSString stringWithFormat:@"%@_cover.jpg",fingerPrintOfProtocal] audioName:@"" videoName:[resultDict[@"urlfile"] lastPathComponent]  picSize:@"" duration:@""  videoSize:@"" picUrl:resultDict[@"urlimg"] audioUrl:@""  videoUrl:resultDict[@"urlfile"] lat:@"" lon:@"" hasReadAudio:0];
         }
             break;
         case 4://语音
         {
-             [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:@"" sendTime:resultDict[@"time"] sendStatus:@"1" byMySelf:0 hasReceive:1 picName:@"" audioName:[resultDict[@"urlfile"] lastPathComponent] videoName:@"" picSize:@"" duration:resultDict[@"content"]  videoSize:@"" picUrl:@"" audioUrl:resultDict[@"urlfile"]  videoUrl:@"" lat:@"" lon:@"" hasReadAudio:0];
+             [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:@"" sendTime:sendTime sendStatus:@"1" byMySelf:0 hasReceive:1 picName:@"" audioName:[resultDict[@"urlfile"] lastPathComponent] videoName:@"" picSize:@"" duration:resultDict[@"content"]  videoSize:@"" picUrl:@"" audioUrl:resultDict[@"urlfile"]  videoUrl:@"" lat:@"" lon:@"" hasReadAudio:0];
         }
             break;
         case 5://位置
         {
-           [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:resultDict[@"content"] sendTime:resultDict[@"time"] sendStatus:@"1" byMySelf:0 hasReceive:1 picName:@"" audioName:@"" videoName:@"" picSize:@"" duration:@"" videoSize:@"" picUrl:@"" audioUrl:@""  videoUrl:@"" lat:resultDict[@"lat"] lon:resultDict[@"lon"] hasReadAudio:0];
+           [self.imDB saveMessageInfoWithMessageInfoId:fingerPrintOfProtocal fromUserId:dwUserid toUid:self.uid messageType:typeu messageText:resultDict[@"content"] sendTime:sendTime sendStatus:@"1" byMySelf:0 hasReceive:1 picName:@"" audioName:@"" videoName:@"" picSize:@"" duration:@"" videoSize:@"" picUrl:@"" audioUrl:@""  videoUrl:@"" lat:resultDict[@"lat"] lon:resultDict[@"lon"] hasReadAudio:0];
         }
             break;
         default:
@@ -259,9 +260,9 @@ static IMClientManager *instance = nil;
     
     
     if(_inChatRoomWithUid != nil && [_inChatRoomWithUid isEqualToString:dwUserid]){
-        [self.imDB insertOrUpdateContactWithMessageId:fingerPrintOfProtocal fromUser:dwUserid toUser:_uid messageType:typeu sendTime:resultDict[@"time"] byMySelf:0 notReadCount:0 messageText:resultDict[@"content"]];
+        [self.imDB insertOrUpdateContactWithMessageId:fingerPrintOfProtocal fromUser:dwUserid toUser:_uid messageType:typeu sendTime:sendTime byMySelf:0 notReadCount:0 messageText:resultDict[@"content"]];
     }else{
-        [self.imDB insertOrUpdateContactWithMessageId:fingerPrintOfProtocal fromUser:dwUserid toUser:_uid messageType:typeu sendTime:resultDict[@"time"] byMySelf:0 notReadCount:1 messageText:resultDict[@"content"]];
+        [self.imDB insertOrUpdateContactWithMessageId:fingerPrintOfProtocal fromUser:dwUserid toUser:_uid messageType:typeu sendTime:sendTime byMySelf:0 notReadCount:1 messageText:resultDict[@"content"]];
     }
     
     NSLog(@"【DEBUG_UI】[%d]收到来自用户%@的消息:%@", typeu, dwUserid, dataContent);

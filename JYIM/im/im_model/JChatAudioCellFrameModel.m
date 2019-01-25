@@ -35,8 +35,8 @@
     //默认最小值为40
     CGFloat minLength = 40;
     //秒数
-    NSInteger seconds = self.messageInfoModel.duration.integerValue;
-    //    self.audioSeconds = seconds;
+    NSInteger seconds = (NSInteger)self.messageInfoModel.duration.floatValue / 1000;
+    
     //1秒
     switch (seconds) {
         case 1:
@@ -60,7 +60,7 @@
     UILabel *label = [[UILabel alloc] init];
     label.numberOfLines = 1;
     label.font = [UIFont systemFontOfSize:12.0];
-    label.text = [NSString stringWithFormat:@"%@''",_messageInfoModel.duration];
+    label.text = [NSString stringWithFormat:@"%.f''",[_messageInfoModel.duration floatValue]/1000];
     [label sizeToFit];
     CGSize secondSize = label.size;
     
