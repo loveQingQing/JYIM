@@ -80,6 +80,8 @@
 		0A69B56E21E6F2E200EAE1BF /* MJRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A69B55821E6F2E200EAE1BF /* MJRefreshComponent.m */; };
 		0A69B57121E7107E00EAE1BF /* nav_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A69B57021E7107E00EAE1BF /* nav_back.png */; };
 		0A6E439021F5A7E600EB43CA /* JChatEmotionTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6E438F21F5A7E600EB43CA /* JChatEmotionTextView.m */; };
+		0A7044FF21FAAC0400506360 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7044FE21FAAC0400506360 /* AudioToolbox.framework */; };
+		0A70450121FAB01D00506360 /* message_come.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0A70450021FAB01D00506360 /* message_come.caf */; };
 		0A7AC8D621EEDA160023D4A6 /* JChatImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7AC8D521EEDA160023D4A6 /* JChatImageCell.m */; };
 		0A7AC8D921EEE2B70023D4A6 /* JChatImageCellFrameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7AC8D821EEE2B70023D4A6 /* JChatImageCellFrameModel.m */; };
 		0A87516321F2A09500E3B52A /* JChatLocationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A87516221F2A09500E3B52A /* JChatLocationCell.m */; };
@@ -348,6 +350,8 @@
 		0A69B57021E7107E00EAE1BF /* nav_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nav_back.png; sourceTree = "<group>"; };
 		0A6E438E21F5A7E600EB43CA /* JChatEmotionTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JChatEmotionTextView.h; sourceTree = "<group>"; };
 		0A6E438F21F5A7E600EB43CA /* JChatEmotionTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JChatEmotionTextView.m; sourceTree = "<group>"; };
+		0A7044FE21FAAC0400506360 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		0A70450021FAB01D00506360 /* message_come.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = message_come.caf; sourceTree = "<group>"; };
 		0A7AC8D421EEDA160023D4A6 /* JChatImageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JChatImageCell.h; sourceTree = "<group>"; };
 		0A7AC8D521EEDA160023D4A6 /* JChatImageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JChatImageCell.m; sourceTree = "<group>"; };
 		0A7AC8D721EEE2B70023D4A6 /* JChatImageCellFrameModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JChatImageCellFrameModel.h; sourceTree = "<group>"; };
@@ -604,6 +608,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A7044FF21FAAC0400506360 /* AudioToolbox.framework in Frameworks */,
 				0A87518221F2CAAA00E3B52A /* SystemConfiguration.framework in Frameworks */,
 				0A87518021F2CAA300E3B52A /* Security.framework in Frameworks */,
 				0A87517E21F2CA9800E3B52A /* QuartzCore.framework in Frameworks */,
@@ -899,6 +904,7 @@
 		0A69B56F21E7106F00EAE1BF /* image */ = {
 			isa = PBXGroup;
 			children = (
+				0A70450021FAB01D00506360 /* message_come.caf */,
 				0A69B57021E7107E00EAE1BF /* nav_back.png */,
 			);
 			path = image;
@@ -1316,6 +1322,7 @@
 		0AD24E9621E2F7BE00A11261 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A7044FE21FAAC0400506360 /* AudioToolbox.framework */,
 				0A87518121F2CAAA00E3B52A /* SystemConfiguration.framework */,
 				0A87517F21F2CAA300E3B52A /* Security.framework */,
 				0A87517D21F2CA9800E3B52A /* QuartzCore.framework */,
@@ -1526,6 +1533,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A70450121FAB01D00506360 /* message_come.caf in Resources */,
 				0A8FF3C121E5D19800C5C695 /* ChatEmotions.plist in Resources */,
 				0A87518421F2CB7400E3B52A /* mapapi.bundle in Resources */,
 				0AD24E5621E2EF9E00A11261 /* LaunchScreen.storyboard in Resources */,

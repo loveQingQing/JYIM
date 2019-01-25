@@ -103,10 +103,10 @@
  数据库类
  */
 @property (nonatomic, strong) IMDataBase * imDB;
-@property (nonatomic, copy) NSString * uid;
+@property (nonatomic, copy) NSString * uid;//当前登录用户uid
 
 //在聊天界面
-@property (nonatomic, copy) NSString * inChatRoomWithUid;
+@property (nonatomic, copy) NSString * inChatRoomWithUid;//在聊天界面时聊天对象的id
 
 /*!
  * 取得本类实例的唯一公开方法。

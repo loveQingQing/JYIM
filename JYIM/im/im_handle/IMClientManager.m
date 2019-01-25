@@ -24,7 +24,9 @@
 #import "ClientCoreSDK.h"
 #import "ConfigEntity.h"
 #import "LocalUDPDataSender.h"
+#import <AudioToolbox/AudioToolbox.h>
 
+static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 @interface IMClientManager ()<ChatBaseEvent,ChatTransDataEvent,MessageQoSEvent>
 
@@ -33,7 +35,7 @@
 //所有的代理
 @property (nonatomic, strong) NSMutableArray *delegates;
 @property (nonatomic, assign) BOOL hasLogin;
-
+@property (strong, nonatomic) NSDate *lastPlaySoundDate;
 
 
 @end
@@ -264,7 +266,10 @@ static IMClientManager *instance = nil;
     }else{
         [self.imDB insertOrUpdateContactWithMessageId:fingerPrintOfProtocal fromUser:dwUserid toUser:_uid messageType:typeu sendTime:sendTime byMySelf:0 notReadCount:1 messageText:resultDict[@"content"]];
     }
-    
+    if(_inChatRoomWithUid == nil || ![_inChatRoomWithUid isEqualToString:dwUserid]){
+        
+        [self playNotifySound];
+    }
     NSLog(@"【DEBUG_UI】[%d]收到来自用户%@的消息:%@", typeu, dwUserid, dataContent);
     for (id<IMClientManagerDelegate> delegate in self.delegates) {
         if ([delegate respondsToSelector:@selector(onTransBuffer:withUserId:andContent:andTypeu:)]) {
@@ -632,6 +637,45 @@ static IMClientManager *instance = nil;
     int code = [[LocalUDPDataSender sharedInstance] sendCommonDataWithStr:jsonStr toUserId:toUid qos:YES fp:fp withTypeu:typeU];
     
     return code;
+}
+
+
+
+#pragma mark --- 消息铃声及震动
+
+//既有铃声也有震动
+- (void)playNotifySound{
+    
+    NSTimeInterval timeInterval = [[NSDate date]
+                                   timeIntervalSinceDate:self.lastPlaySoundDate];
+    if (timeInterval < kDefaultPlaySoundInterval) {
+        //如果距离上次响铃和震动时间太短, 则跳过响铃
+        NSLog(@"skip ringing & vibration %@, %@", [NSDate date], self.lastPlaySoundDate);
+        return;
+    }
+    
+    //保存最后一次响铃时间
+    self.lastPlaySoundDate = [NSDate date];
+    
+    //获取路径
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"message_come" ofType:@"caf"];
+    //定义一个SystemSoundID
+    SystemSoundID soundID;
+    //判断路径是否存在
+    if (path) {
+        //创建一个音频文件的播放系统声音服务器
+        OSStatus error = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)([NSURL fileURLWithPath:path]), &soundID);
+        //判断是否有错误
+        if (error != kAudioServicesNoError) {
+            NSLog(@"%d",(int)error);
+        }else{
+            //播放声音和振动
+            AudioServicesPlayAlertSoundWithCompletion(soundID, ^{
+                //播放成功回调
+            });
+        }
+    }
+   
 }
 
 
