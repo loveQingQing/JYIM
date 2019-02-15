@@ -1186,8 +1186,11 @@
 #pragma mark - 收发消息 滚动到底部
 - (void)scrollToBottom
 {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_datas.count - 1 inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    if (self.datas.count > 0) {
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_datas.count - 1 inSection:0];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
 
 }
 
