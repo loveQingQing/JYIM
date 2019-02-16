@@ -162,11 +162,11 @@
 
 
 
-- (void)setContent:(MessageInfoModel *)videoInfoModel
+- (void)setContent:(MessageInfoModel *)locationInfoModel
 {
-    if (videoInfoModel.shouldShowTime == YES) {
+    if (locationInfoModel.shouldShowTime == YES) {
         _timeContainer.hidden = NO;
-        self.timeLabel.text = [NSDate timeStringWithTimeInterval:videoInfoModel.sendTime];
+        self.timeLabel.text = [NSDate timeStringWithTimeInterval:locationInfoModel.sendTime];
     }else{
         _timeContainer.hidden = YES;
     }
@@ -185,14 +185,14 @@
     leftHeightCoverImage           = [leftHeightCoverImage stretchableImageWithLeftCapWidth:leftHeightCoverImage.size.width*0.6 topCapHeight:leftHeightCoverImage.size.height*0.8];
     leftWidthCoverImage            = [leftWidthCoverImage stretchableImageWithLeftCapWidth:leftWidthCoverImage.size.width*0.5 topCapHeight:leftWidthCoverImage.size.height*0.8];
     
-    if (videoInfoModel.byMySelf == YES) {//本人
+    if (locationInfoModel.byMySelf == YES) {//本人
         
-        if([videoInfoModel.sendStatus isEqualToString:@"0"]){
+        if([locationInfoModel.sendStatus isEqualToString:@"0"]){
             self.failureButton.hidden = NO;
             self.activiView.hidden = YES;
             [self.activiView stopAnimating];
             
-        }else if ([videoInfoModel.sendStatus isEqualToString:@"1"]){
+        }else if ([locationInfoModel.sendStatus isEqualToString:@"1"]){
             self.failureButton.hidden = YES;
             self.activiView.hidden = YES;
             [self.activiView stopAnimating];
