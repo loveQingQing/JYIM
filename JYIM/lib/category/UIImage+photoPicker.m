@@ -60,13 +60,15 @@ typedef void(^albumAuthorizationCallBack)();
     }
     NSString *fileName = @"tempAssetVideo.mov";
     if (resource.originalFilename) {
-        //命名规范可以自行定义 ， 但是要保证不要重复
-        fileName = [NSString stringWithFormat:@"chatVideo_%@%@",getCurrentTime(),resource.originalFilename];
+        //命名规范可以自行定义 ， 但是要保证不要重复防止有汉字
+         fileName = [NSString stringWithFormat:@"chatVideo_%@%@",getCurrentTime(),resource.originalFilename];
+         fileName = [fileName stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:fileName]];
     }
     //创建视频模型
     ChatAlbumModel *videoModel = [[ChatAlbumModel alloc]init];
     //缩略图
     videoModel.videoCoverImg = cover;
+    videoModel.videoAsset = asset;
     //视频时长
     videoModel.duration = [@(asset.duration)stringValue];
     //视频名称
