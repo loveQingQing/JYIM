@@ -18,7 +18,7 @@ typedef void(^audioPlayerPauseCallback)(MessageInfoModel * theAudioModel,NSIndex
 typedef void(^audioPlayerWillPlayCallback)(MessageInfoModel * theAudioModel,NSIndexPath *theIndexPath);
 
 //下载中的回调
-typedef void(^audioPlayerdownloadingCallback)(MessageInfoModel * theAudioModel,NSIndexPath *theIndexPath,double progress);
+typedef void(^audioPlayerdownloadingCallback)(MessageInfoModel * theAudioModel,NSIndexPath *theIndexPath,CGFloat progress);
 
 //下载失败的回调
 typedef void(^audioPlayerdownloadFailedCallback)(MessageInfoModel * theAudioModel,NSIndexPath *theIndexPath);
