@@ -1,5 +1,5 @@
 # JYIM
-基于mobileimsdk的即时通讯
+ci基于mobileimsdk的即时通讯
 
 https://github.com/JackJiang2011/MobileIMSDK
 
